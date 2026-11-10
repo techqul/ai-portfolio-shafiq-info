@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@shafiq-info/ui";
 import { ArticleRow } from "@/components/articles/article-row";
@@ -20,6 +20,7 @@ const NAV_BUTTON_CLASSES =
 export function RelatedArticlesCarousel({ articles }: { articles: Article[] }) {
   const pageCount = Math.ceil(articles.length / PAGE_SIZE);
   const [[page, direction], setState] = useState<[number, number]>([0, 0]);
+  const prefersReducedMotion = useReducedMotion();
   if (articles.length === 0) return null;
 
   const start = page * PAGE_SIZE;
@@ -39,7 +40,7 @@ export function RelatedArticlesCarousel({ articles }: { articles: Article[] }) {
             initial={{ x: direction >= 0 ? 80 : -80, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: direction >= 0 ? -80 : 80, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col"
           >
             {visible.map((article, index) => (

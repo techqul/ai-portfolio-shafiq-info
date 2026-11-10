@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@shafiq-info/ui";
 import type { GalleryItem } from "@shafiq-info/types";
@@ -17,6 +17,7 @@ export function GalleryCarousel({ items }: { items: GalleryItem[] }) {
   const pageCount = Math.ceil(items.length / PAGE_SIZE);
   const [[page, direction], setState] = useState<[number, number]>([0, 0]);
   const [paused, setPaused] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   function go(delta: number) {
     setState(([p]) => [(p + delta + pageCount) % pageCount, delta]);
@@ -50,7 +51,7 @@ export function GalleryCarousel({ items }: { items: GalleryItem[] }) {
             initial={{ x: direction >= 0 ? 80 : -80, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: direction >= 0 ? -80 : 80, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
             {visible.map((item) => (

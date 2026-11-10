@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { Badge } from "@shafiq-info/ui";
 
 const MAX_ORBIT_BADGES = 8;
@@ -37,6 +37,11 @@ export function AnimatedProfile({
   technologies: string[];
 }) {
   const badges = technologies.slice(0, MAX_ORBIT_BADGES);
+  // These are all continuous (repeat: Infinity) animations — exactly what
+  // prefers-reduced-motion is meant to suppress, and the global CSS rule
+  // doesn't reach motion's JS-driven animate props. Dropping `animate`
+  // entirely leaves each element at its static resting values.
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <div className="mx-auto w-full max-w-60 px-4 sm:max-w-sm sm:px-8">
@@ -45,7 +50,7 @@ export function AnimatedProfile({
         <motion.div
           aria-hidden="true"
           className="bg-gradient-brand absolute inset-0 rounded-full opacity-30 blur-3xl"
-          animate={{ scale: [1, 1.08, 1], opacity: [0.25, 0.4, 0.25] }}
+          animate={prefersReducedMotion ? undefined : { scale: [1, 1.08, 1], opacity: [0.25, 0.4, 0.25] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         />
 
@@ -59,7 +64,7 @@ export function AnimatedProfile({
               "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 3px))",
             mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 3px))",
           }}
-          animate={{ rotate: 360 }}
+          animate={prefersReducedMotion ? undefined : { rotate: 360 }}
           transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
         />
 
@@ -78,7 +83,7 @@ export function AnimatedProfile({
           <div className="absolute -bottom-1 left-1/2 -translate-x-1/2">
             <motion.div
               className="flex items-center gap-1.5 rounded-full border border-border bg-background-elevated px-2.5 py-0.5 shadow-glow sm:px-3 sm:py-1"
-              animate={{ y: [0, -6, 0] }}
+              animate={prefersReducedMotion ? undefined : { y: [0, -6, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
               <span className="relative flex h-2 w-2">
@@ -97,7 +102,7 @@ export function AnimatedProfile({
             style={getOrbitPosition(index, badges.length)}
           >
             <motion.div
-              animate={{ y: [0, -8, 0] }}
+              animate={prefersReducedMotion ? undefined : { y: [0, -8, 0] }}
               transition={{
                 duration: 3 + index * 0.4,
                 repeat: Infinity,

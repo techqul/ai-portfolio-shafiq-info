@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { motion, type Variants } from "motion/react";
+import { motion, useReducedMotion, type Variants } from "motion/react";
 import { Button, Badge } from "@shafiq-info/ui";
 import type { Profile } from "@shafiq-info/types";
 import { OpenAskShafiqButton } from "@/components/ai/open-ask-shafiq-button";
@@ -36,11 +36,15 @@ export function HeroContent({
   profile: Profile;
   topTechnologies: string[];
 }) {
+  // Global CSS prefers-reduced-motion doesn't reach motion's JS-driven
+  // variants — skip straight to the "show" state for the hero's stagger-in.
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <div className="site-container mx-auto grid items-center gap-12 px-6 py-20 sm:py-24 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8">
       <motion.div
         variants={container}
-        initial="hidden"
+        initial={prefersReducedMotion ? "show" : "hidden"}
         animate="show"
         className="flex flex-col items-center gap-8 text-center lg:items-start lg:text-left"
       >
@@ -102,7 +106,7 @@ export function HeroContent({
 
       <motion.div
         variants={imageReveal}
-        initial="hidden"
+        initial={prefersReducedMotion ? "show" : "hidden"}
         animate="show"
         className="order-first lg:order-last"
       >

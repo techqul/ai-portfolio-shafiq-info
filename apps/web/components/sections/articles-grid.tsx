@@ -1,5 +1,3 @@
-"use client";
-
 import { RevealGroup } from "@/components/common/reveal";
 import { ArticleCard } from "@/components/articles/article-card";
 import { ArticleRow } from "@/components/articles/article-row";

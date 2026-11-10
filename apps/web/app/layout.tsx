@@ -22,10 +22,13 @@ const geistMono = Geist_Mono({
 });
 
 // Handwritten accents (footer script flourishes). Exposed as `font-script`
-// via the --font-script theme mapping in globals.css.
+// via the --font-script theme mapping in globals.css. preload: false since
+// it's used in exactly 2 small below-the-fold spots — no reason to compete
+// with the critical-path sans/mono fonts for bandwidth on first load.
 const caveat = Caveat({
   variable: "--font-caveat",
   subsets: ["latin"],
+  preload: false,
 });
 
 export const metadata: Metadata = {

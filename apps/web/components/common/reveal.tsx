@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
 export function Reveal({
@@ -14,9 +14,15 @@ export function Reveal({
   className?: string;
   y?: number;
 }) {
+  // The global CSS prefers-reduced-motion rule (globals.css) only zeroes out
+  // CSS animations/transitions — it doesn't reach motion's JS-driven
+  // animations. `initial={false}` skips the entrance animation entirely and
+  // renders straight at the whileInView target.
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ opacity: 0, y }}
+      initial={prefersReducedMotion ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.55, delay, ease: [0.16, 1, 0.3, 1] }}

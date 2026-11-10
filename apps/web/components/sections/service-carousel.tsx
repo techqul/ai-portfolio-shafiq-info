@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, cn } from "@shafiq-info/ui";
 import { ServiceIcon } from "@/components/common/service-icon";
@@ -17,6 +17,7 @@ const NAV_BUTTON_CLASSES =
 export function ServiceCarousel({ services }: { services: Service[] }) {
   const pageCount = Math.ceil(services.length / PAGE_SIZE);
   const [[page, direction], setState] = useState<[number, number]>([0, 0]);
+  const prefersReducedMotion = useReducedMotion();
   if (services.length === 0) return null;
 
   const start = page * PAGE_SIZE;
@@ -36,7 +37,7 @@ export function ServiceCarousel({ services }: { services: Service[] }) {
             initial={{ x: direction >= 0 ? 80 : -80, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: direction >= 0 ? -80 : 80, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="grid gap-6 sm:grid-cols-2"
           >
             {visible.map((service) => (
